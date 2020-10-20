@@ -13,8 +13,33 @@
       <v-toolbar-title class="white--text">Credit Control</v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" fixed temporary>
-      
+    <v-navigation-drawer v-model="drawer" fixed temporary app>
+      <v-list dense rounded>
+        <v-list-item link :to="{name: 'Home'}">
+          
+          <v-list-item-icon>
+            <v-icon >mdi-home</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title >Home</v-list-item-title>
+          </v-list-item-content>
+
+        </v-list-item>
+
+        <v-list-item  :to="{name: 'Client'}">
+          
+          <v-list-item-icon>
+            <v-icon>mdi-contacts</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title color="red lighten-2">Clients</v-list-item-title>
+          </v-list-item-content>
+
+        </v-list-item>
+
+      </v-list>
     </v-navigation-drawer>
 
     <v-main>
