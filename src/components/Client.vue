@@ -62,6 +62,10 @@
                                             ></v-text-field>
                                         </v-col>
 
+                                        <v-col cols="12" v-show="valid">
+                                            <div class="red--text" v-for="v in validMessage" :key="v" v-text="v"></div>
+                                        </v-col>
+
                                     </v-row>
                                 </v-container>
                             </v-card-text>
@@ -150,8 +154,9 @@ export default {
             address:'', 
             phone_number:'',
             email:'',
-            credit_limit:0.0
-            
+            credit_limit:0.0,
+            valid:0,
+            validMessage:[],
 
             
         }
@@ -164,6 +169,7 @@ export default {
     methods:{
         list(){
             let me = this;
+            
             axios.get('api/Clients/List').then(function(response){
                     me.clients = response.data;
                 }).catch(function(error){
@@ -171,8 +177,37 @@ export default {
                 });
         },
 
+        validate(){
+            let me = this;
+            me.valid = 0;
+            me.validMessage = [];
+            if(me.name.length < 3 || me.name.length > 50){
+                me.validMessage.push("The Name should be have more than 3 characteres and minus than 50 characteres.")
+            }
+
+            if(me.address.length < 30 || me.address.length > 250){
+                me.validMessage.push("The Address should be have more than 30 characteres and minus than 250 characteres.")
+            }
+
+            if(me.phone_number.length < 8 || me.phone_number.length > 20){
+                me.validMessage.push("The Phone number should be have more than 7 characteres and minus than 20 characteres.")
+            }
+            if(!me.credit_limit || me.credit_limit == 0){
+                me.validMessage.push("You must enter the credit limit.")
+            }
+
+            if(me.validMessage.length > 0){
+                me.valid = 1;
+            }
+
+            return me.valid;            
+        },
+
         createClient(){
             let me = this;
+            if(me.validate()){
+                return;
+            }
             axios.post('api/Clients/CreateClient',{
                 'name': me.name,
                 'address': me.address,
@@ -181,10 +216,20 @@ export default {
                 'credit_limit' : me.credit_limit
             }).then(function(response){
                 me.dialog = false;
+                me.cleanUp();
                 me.list();
             }).catch(function(error){
                 console.log(error);
             })
+        },
+
+        cleanUp(){
+            let me = this;
+            me.name = '',
+            me.address = '',
+            me.phone_number = '',
+            me.email = '',
+            me.credit_limit = 0
         },
     }
 
