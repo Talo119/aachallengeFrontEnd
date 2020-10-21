@@ -13,8 +13,26 @@
       <v-toolbar-title class="white--text">Credit Control</v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" fixed temporary app>
-      <v-list dense rounded>
+    <v-navigation-drawer v-model="drawer" 
+      fixed 
+      temporary 
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      app
+      >
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            Application
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            Menu
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
         <v-list-item link :to="{name: 'Home'}">
           
           <v-list-item-icon>
