@@ -25,6 +25,7 @@
                                             <v-text-field
                                                 label="Name"
                                                 required
+                                                v-model="name"
                                             ></v-text-field>
                                         </v-col>
 
@@ -32,6 +33,7 @@
                                             <v-text-field
                                                 label="Address"
                                                 required
+                                                v-model="address"
                                             ></v-text-field>
                                         </v-col>
 
@@ -39,13 +41,14 @@
                                             <v-text-field
                                                 label="Phone Number"
                                                 required
-                                                type="number"
+                                                v-model="phone_number"                                                
                                             ></v-text-field>
                                         </v-col>
 
                                         <v-col cols="12">
                                             <v-text-field
                                                 label="Email"
+                                                v-model="email"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -54,6 +57,7 @@
                                             <v-text-field
                                                 label="Credit Limit"
                                                 required
+                                                v-model="credit_limit"
                                                 type="number"
                                             ></v-text-field>
                                         </v-col>
@@ -73,7 +77,7 @@
                                 <v-btn
                                     color="primary"
                                     text
-                                    @click="dialog = false"
+                                    @click="createClient()"
                                 >
                                     Save
                                 </v-btn>
@@ -141,7 +145,14 @@ export default {
                 {text:'Credit Limit', value:'credit_limit'},
                 {text:'Actions', value:'actions'},
             ],
-            search:""
+            search:"",            
+            name:'', 
+            address:'', 
+            phone_number:'',
+            email:'',
+            credit_limit:0.0
+            
+
             
         }
     },
@@ -158,7 +169,23 @@ export default {
                 }).catch(function(error){
                     console.log(error);
                 });
-        }
+        },
+
+        createClient(){
+            let me = this;
+            axios.post('api/Clients/CreateClient',{
+                'name': me.name,
+                'address': me.address,
+                'phone_number': me.phone_number,
+                'email': me.email,
+                'credit_limit' : me.credit_limit
+            }).then(function(response){
+                me.dialog = false;
+                me.list();
+            }).catch(function(error){
+                console.log(error);
+            })
+        },
     }
 
 }
