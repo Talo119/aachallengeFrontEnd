@@ -33,30 +33,71 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item link :to="{name: 'Home'}">
+        <template>
+          <v-list-item link :to="{name: 'Home'}">
           
-          <v-list-item-icon>
-            <v-icon >mdi-home</v-icon>
-          </v-list-item-icon>
+            <v-list-item-icon>
+              <v-icon >mdi-view-dashboard</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title >Home</v-list-item-title>
-          </v-list-item-content>
+            <v-list-item-content>
+              <v-list-item-title >Home</v-list-item-title>
+            </v-list-item-content>
 
-        </v-list-item>
-
-        <v-list-item  :to="{name: 'Client'}">
+          </v-list-item>
+        </template>
+        
+        <template>
+          <v-list-item  :to="{name: 'Client'}">
           
-          <v-list-item-icon>
-            <v-icon>mdi-contacts</v-icon>
-          </v-list-item-icon>
+            <v-list-item-action>
+              <v-icon>mdi-account-box-multiple</v-icon>
+            </v-list-item-action>
 
-          <v-list-item-content>
-            <v-list-item-title color="red lighten-2">Clients</v-list-item-title>
-          </v-list-item-content>
+            <v-list-item-content>
+              <v-list-item-title color="red lighten-2">Clients</v-list-item-title>
+            </v-list-item-content>
 
-        </v-list-item>
+          </v-list-item>
+        </template>
 
+        <template>
+          <v-list-group>
+            <v-list-item slot="activator">
+              <v-list-item-content>
+                <v-list-item-title>
+                  Finance
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item :to="{name:'Loan'}">
+              <v-list-item-action>
+                <v-icon>
+                  mdi-cash-multiple
+                </v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Loans
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item :to="{name:'Payment'}">
+              <v-list-item-action>
+                <v-icon>
+                  mdi-wallet
+                </v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Payments
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </template>
       </v-list>
     </v-navigation-drawer>
 

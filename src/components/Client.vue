@@ -15,7 +15,7 @@
                         </template>
                         <v-card>
                             <v-card-title>
-                                <span class="headline secondary--text">New Client</span>
+                                <span class="headline secondary--text">{{ formTitle }}</span>
                             </v-card-title>
                             <v-card-text>
                                 <v-container>
@@ -111,13 +111,14 @@
                 <template v-slot:item.credit_limit="{ item }">
                     L.{{ item.credit_limit }}                        
                 </template>
-
+                
                 <template v-slot:item.actions="{ item }">
                     <v-btn
                         class="mx-2"
                         fab
                         dark
                         x-small
+                        @click="editItem(item)"
                         color="secondary"
                         >
                         <v-icon dark>
@@ -137,9 +138,9 @@ export default {
     
     data(){
         return{
-            dialog:false,
+            dialog:false,            
             clients:[
-                //{name:'Oscar Perdomo', address:'Barrio Guamilito',phone_number:'9645-1423',email:'oscarp@gmail.com',credit_limit:'5000'}
+                {name:'Oscar Perdomo', address:'Barrio Guamilito',phone_number:'9645-1423',email:'oscarp@gmail.com',credit_limit:'5000'}
             ],
             header:[
                 {text:'Name', value:'name'},
@@ -149,7 +150,9 @@ export default {
                 {text:'Credit Limit', value:'credit_limit'},
                 {text:'Actions', value:'actions'},
             ],
-            search:"",            
+            search:"",
+            editedIndex: -1,
+            idclient:'',          
             name:'', 
             address:'', 
             phone_number:'',
@@ -162,8 +165,14 @@ export default {
         }
     },
 
+    cumputed:{
+        formTitle () {
+            return this.editedIndex == -1 ? 'New Client' : 'Edit Client'
+        },
+    },
+
     created(){
-        this.list();
+        //this.list();
     },
 
     methods:{
@@ -223,13 +232,25 @@ export default {
             })
         },
 
+        editItem(item){
+            this.idclient = item.idclient;
+            this.name = item.name;
+            this.address = item.address;
+            this.phone_number = item.phone_number;
+            this.email = item.email;
+            this.credit_limit = item.credit_limit;
+            this.editedIndex = 1;
+            this.dialog = true;
+        },
+        
         cleanUp(){
             let me = this;
             me.name = '',
             me.address = '',
             me.phone_number = '',
             me.email = '',
-            me.credit_limit = 0
+            me.credit_limit = 0,
+            me.editedIndex = -1
         },
     }
 
