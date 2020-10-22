@@ -74,14 +74,14 @@
                                 <v-btn
                                     color="primary"
                                     text
-                                    @click="dialog = false"
+                                    @click="closeForm()"
                                 >
                                     Close
                                 </v-btn>
                                 <v-btn
                                     color="primary"
                                     text
-                                    @click="createClient()"
+                                    @click="save()"
                                 >
                                     Save
                                 </v-btn>
@@ -140,7 +140,7 @@ export default {
         return{
             dialog:false,            
             clients:[
-                {name:'Oscar Perdomo', address:'Barrio Guamilito',phone_number:'9645-1423',email:'oscarp@gmail.com',credit_limit:'5000'}
+                //{name:'Oscar Perdomo', address:'Barrio Guamilito',phone_number:'9645-1423',email:'oscarp@gmail.com',credit_limit:'5000'}
             ],
             header:[
                 {text:'Name', value:'name'},
@@ -160,19 +160,18 @@ export default {
             credit_limit:0.0,
             valid:0,
             validMessage:[],
+            formTitle:'New Client'
 
             
         }
     },
 
     cumputed:{
-        formTitle () {
-            return this.editedIndex == -1 ? 'New Client' : 'Edit Client'
-        },
+        
     },
 
     created(){
-        //this.list();
+        this.list();
     },
 
     methods:{
@@ -212,24 +211,48 @@ export default {
             return me.valid;            
         },
 
-        createClient(){
-            let me = this;
-            if(me.validate()){
+        save(){            
+            
+            if(this.validate()){
                 return;
             }
-            axios.post('api/Clients/CreateClient',{
-                'name': me.name,
-                'address': me.address,
-                'phone_number': me.phone_number,
-                'email': me.email,
-                'credit_limit' : me.credit_limit
-            }).then(function(response){
-                me.dialog = false;
-                me.cleanUp();
-                me.list();
-            }).catch(function(error){
-                console.log(error);
-            })
+            if(this.editedIndex > -1){
+                //Edit
+                let me = this;
+                axios.put('api/Clients/ActualizeClient',{
+                    'idclient': me.idclient,
+                    'name': me.name,
+                    'address': me.address,
+                    'phone_number': me.phone_number,
+                    'email': me.email,
+                    'credit_limit' : me.credit_limit
+                }).then(function(response){
+                    me.dialog = false;
+                    me.cleanUp();
+                    me.list();
+                }).catch(function(error){
+                    console.log(error);
+                })
+            }else{
+                //Create
+                let me = this;
+                axios.post('api/Clients/CreateClient',{
+                    'name': me.name,
+                    'address': me.address,
+                    'phone_number': me.phone_number,
+                    'email': me.email,
+                    'credit_limit' : me.credit_limit
+                }).then(function(response){
+                    me.dialog = false;
+                    me.cleanUp();
+                    me.list();
+                }).catch(function(error){
+                    console.log(error);
+                })
+            }
+
+
+            
         },
 
         editItem(item){
@@ -241,8 +264,16 @@ export default {
             this.credit_limit = item.credit_limit;
             this.editedIndex = 1;
             this.dialog = true;
+            this.formTitle = 'Edit Client';
         },
         
+        closeForm(){
+            this.cleanUp();
+            this.dialog = false;
+            this.valid = 0;
+            this.validMessage = [];
+        },
+
         cleanUp(){
             let me = this;
             me.name = '',
@@ -250,7 +281,8 @@ export default {
             me.phone_number = '',
             me.email = '',
             me.credit_limit = 0,
-            me.editedIndex = -1
+            me.editedIndex = -1,
+            me.formTitle = 'New Client'
         },
     }
 
