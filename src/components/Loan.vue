@@ -55,6 +55,10 @@
                                             ></v-text-field>
                                         </v-col>
 
+                                        <v-col cols="12" v-show="valid">
+                                            <div class="red--text" v-for="v in validMessage" :key="v" v-text="v"></div>
+                                        </v-col>
+
                                     </v-row>
                                 </v-container>
                             </v-card-text>
@@ -64,7 +68,7 @@
                                     color="primary"
                                     text
                                     class="text-end"
-                                    @click="loans.dialog = false"
+                                    @click="closeFormLoan()"
                                 >
                                     Close
                                 </v-btn>
@@ -103,7 +107,7 @@
                         <v-col class="mx-0" cols="6">
                             <v-btn                                
                                 icon
-                                class="mr-0"
+                                class="mx-0"
                                 @click="editItem(item)"
                                 color="green"
                                 >
@@ -116,7 +120,7 @@
                         <v-col class="mx-0" cols="6">
                             <v-btn                                
                                 icon
-                                class="mr-0"
+                                class="mx-0"
                                 @click="editItem(item)"
                                 color="red"
                                 >
@@ -165,7 +169,12 @@ export default {
                 clients:[
                     //{text:'Jorge Ramirez', value:'1'}
                 ],
+               
             },
+
+            valid:0,
+            validMessage:[]
+
         }
     },
 
@@ -211,8 +220,61 @@ export default {
             me.loans.fee = (me.loans.amount_to_finance / me.loans.period).toFixed(2);
         },
 
+        validate(){
+            let me = this;
+            me.valid = 0;
+            me.validMessage = [];
+
+            if(!me.loans.idclient || me.loans.idclient == 0){
+                me.validMessage.push("You must enter the Client.")
+            }
+
+            if(!me.loans.capital || me.loans.capital == 0){
+                me.validMessage.push("You must enter the capital.")
+            }
+
+            if(!me.loans.interest_rate || me.loans.interest_rate == 0){
+                me.validMessage.push("You must enter the interest rate.")
+            }
+
+            if(!me.loans.period || me.loans.period == 0){
+                me.validMessage.push("You must enter the interest rate.")
+            }
+
+            if(me.validMessage.length > 0){
+                me.valid = 1;
+            }
+
+            return me.valid;
+
+        },
+
+        cleanLoan(){
+            let me = this;
+            me.loans.idclient = '';
+            me.loans.capital = 0;
+            me.loans.interest_rate = 0;
+            me.loans.period = 1;
+            me.loans.interest_to_pay = 0;
+            me.loans.amount_to_finance = 0;
+            me.loans.fee = 0;      
+        },
+
+        closeFormLoan(){
+            let me = this;
+            me.cleanLoan();
+            me.loans.dialog = false;
+            me.valid = 0;
+            me.validMessage = [];
+        },
+
         save(){
             let me = this;
+
+            if(me.validate()){
+                return;
+            }
+
             me.calculate();
             axios.post('api/Loans/CreateLoan',{
                 'idclient': me.loans.idclient,
