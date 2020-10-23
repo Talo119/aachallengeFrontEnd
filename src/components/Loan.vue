@@ -1,5 +1,5 @@
 <template>
-    <container>
+    <v-container>
         <v-row class="my-2" justify="end">
             <v-col xs6 color="secondary">
                 <h1 class="secondary--text">Loans</h1>
@@ -7,7 +7,7 @@
 
             <v-col class="text-end" xs6>
                 <v-row justify="end">
-                    <v-dialog v-model="dialog" persistent max-width="500px">
+                    <v-dialog v-model="loans.dialog" persistent max-width="500px">
                         <template v-slot:activator="{on, attrs}">
                             <v-btn class="mx-2" fab dark color="primary" v-bind="attrs" v-on="on">
                                 <v-icon>mdi-plus</v-icon>
@@ -18,23 +18,61 @@
                                 <span class="headline secondary--text">New Loan</span>
                             </v-card-title>
                             <v-card-text>
-                                <container>
-                                    <v-row></v-row>
-                                </container>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            
+                                            <v-select v-model="loans.idclient"
+                                                :items="loans.clients" label="Client">
+                                            </v-select>
+                                            
+                                        </v-col>
+
+                                        <v-col cols="4">
+                                            <v-text-field
+                                                label="Capital"
+                                                required
+                                                type="number"
+                                                v-model="loans.capital"
+                                            ></v-text-field>
+                                        </v-col>
+
+                                        <v-col cols="4">
+                                            <v-text-field
+                                                label="Interest Rate"
+                                                required
+                                                type="number"
+                                                v-model="loans.interest_rate"
+                                            ></v-text-field>
+                                        </v-col>
+
+                                        <v-col cols="4">
+                                            <v-text-field
+                                                label="Period (Months)"
+                                                required
+                                                type="number"
+                                                v-model="loans.period"
+                                            ></v-text-field>
+                                        </v-col>
+
+                                    </v-row>
+                                </v-container>
                             </v-card-text>
                             <v-spacer></v-spacer>
-                            <v-card-actions>
+                            <v-card-actions class="text-end">
                                 <v-btn
                                     color="primary"
                                     text
-                                    @click="dialog = false"
+                                    class="text-end"
+                                    @click="loans.dialog = false"
                                 >
                                     Close
                                 </v-btn>
                                 <v-btn
                                     color="primary"
                                     text
-                                    @click="dialog = false"
+                                    class="text-end"
+                                    @click="loans.dialog = false"
                                 >
                                     Save
                                 </v-btn>
@@ -44,10 +82,11 @@
                 </v-row>
             </v-col>
         </v-row>
+
         <v-card>
             <v-card-title>
                 <v-text-field
-                    v-model="search"
+                    v-model="loans.search"
                     append-icon="mdi-magnify"
                     label="Search"
                     single-line
@@ -56,13 +95,13 @@
             </v-card-title>
 
             <v-data-table
-                :header="header"
-                :items="loans"
-                :search="search">
+                :header="loans.header"
+                :items="loans.list"
+                :search="loans.search">
 
             </v-data-table>
         </v-card>
-    </container>
+    </v-container>
 </template>
 <script>
 import axios from 'axios'
@@ -71,14 +110,46 @@ export default {
         return{
             loans:{
                 dialog:false,
-                loans:[],
-                header:[],
+                list:[],
+                header:[
+                    {text:'# Loan', value:'idloan'},
+                    {text:'Client', value:'client'},
+                    {text:'Capital', value:'capital'},
+                    {text:'Interest Rate', value:'interest_rate'},
+                    {text:'Period', value:'period'},
+                    {text:'Interest to Pay', value:'interest_to_pay'},
+                    {text:'Amount to Finance', value:'amount_to_finance'},
+                    {text:'Fee', value:'fee'},
+                    {text:'Date', value:'created_dt'},
+                    {text:'Actions', value:'actions'},
+                ],
                 search:'',
-                editedIndex:-1
+                editedIndex:-1,
+                idclient:'',
+                capital:0,
+                interest_rate:0,
+                period:0,
+                clients:[
+                    {text:'Jorge Ramirez', value:'1'}
+                ],
             },
-            
-
         }
     },
+
+    created(){
+        this.list();
+    },
+
+    methods:{
+        list(){
+            let me = this;            
+            axios.get('api/Loans/List').then(function(response){
+                    me.loans.list = response.data;
+                }).catch(function(error){
+                    console.log(error);
+                });
+        },
+    }
+
 }
 </script>

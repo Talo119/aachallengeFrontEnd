@@ -176,8 +176,7 @@ export default {
 
     methods:{
         list(){
-            let me = this;
-            
+            let me = this;            
             axios.get('api/Clients/List').then(function(response){
                     me.clients = response.data;
                 }).catch(function(error){
