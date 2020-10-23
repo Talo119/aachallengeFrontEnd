@@ -128,11 +128,26 @@ export default {
                 idclient:'',
                 capital:0,
                 interest_rate:0,
+                interest_to_pay:0,
+                amount_to_finance:0,
                 period:0,
+                fee:0,                
                 clients:[
                     //{text:'Jorge Ramirez', value:'1'}
                 ],
             },
+        }
+    },
+
+    computed:{
+        calculate(){
+            let me = this;
+            me.loans.interest_to_pay = 0;
+            me.loans.amount_to_finance =0;
+            me.loans.fee = 0;
+            me.loans.interest_to_pay = me.loans.capital * (me.loans.interest_rate/100) * me.loans.period;
+            me.loans.amount_to_finance = parseFloat(me.loans.capital) + parseFloat(me.loans.interest_to_pay);
+            me.loans.fee = me.loans.amount_to_finance / me.loans.period;
         }
     },
 
