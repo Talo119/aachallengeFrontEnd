@@ -72,7 +72,7 @@
                                     color="primary"
                                     text
                                     class="text-end"
-                                    @click="loans.dialog = false"
+                                    @click="save()"
                                 >
                                     Save
                                 </v-btn>
@@ -95,10 +95,23 @@
             </v-card-title>
 
             <v-data-table
-                :header="loans.header"
+                :headers="loans.header"
                 :items="loans.list"
                 :search="loans.search">
-
+                <template v-slot:item.actions="{ item }">
+                    <v-btn
+                        class="mx-2"
+                        fab
+                        dark
+                        x-small
+                        @click="editItem(item)"
+                        color="secondary"
+                        >
+                        <v-icon dark>
+                            mdi-pencil
+                        </v-icon>
+                    </v-btn>
+                </template>
             </v-data-table>
         </v-card>
     </v-container>
@@ -177,7 +190,26 @@ export default {
             }).catch(function(error){
                 console.log(error);
             });
+        },
+
+        save(){
+            let me = this;
+            axios.post('api/Loans/CreateLoan',{
+                'idclient': me.loans.idclient,
+                'capital': parseFloat(me.loans.capital),
+                'interest_rate': parseFloat(me.loans.interest_rate),
+                'period': parseInt(me.loans.period),
+                'interest_to_pay': parseFloat(me.loans.interest_to_pay),
+                'amount_to_finance': parseFloat(me.loans.amount_to_finance),
+                'fee': parseFloat(me.loans.fee.toFixed(2)),
+            }).then(function (response){
+                me.loans.dialog = false;
+                me.list();
+            }).catch(function(error){
+                console.log(error);
+            })
         }
+
     }
 
 }
