@@ -130,7 +130,7 @@ export default {
                 interest_rate:0,
                 period:0,
                 clients:[
-                    {text:'Jorge Ramirez', value:'1'}
+                    //{text:'Jorge Ramirez', value:'1'}
                 ],
             },
         }
@@ -138,6 +138,7 @@ export default {
 
     created(){
         this.list();
+        this.selectClient();
     },
 
     methods:{
@@ -149,6 +150,19 @@ export default {
                     console.log(error);
                 });
         },
+
+        selectClient(){
+            let me = this;
+            var clientsArray=[];
+            axios.get('api/Clients/SelectClients').then(function(response){                    
+                clientsArray = response.data;  
+                clientsArray.map(function(x){
+                    me.loans.clients.push({text:x.name, value:x.idclient});
+                });
+            }).catch(function(error){
+                console.log(error);
+            });
+        }
     }
 
 }
