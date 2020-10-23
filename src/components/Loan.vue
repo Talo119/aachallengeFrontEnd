@@ -99,18 +99,35 @@
                 :items="loans.list"
                 :search="loans.search">
                 <template v-slot:item.actions="{ item }">
-                    <v-btn
-                        class="mx-2"
-                        fab
-                        dark
-                        x-small
-                        @click="editItem(item)"
-                        color="secondary"
-                        >
-                        <v-icon dark>
-                            mdi-pencil
-                        </v-icon>
-                    </v-btn>
+                    <v-row>
+                        <v-col class="mx-0" cols="6">
+                            <v-btn                                
+                                icon
+                                class="mr-0"
+                                @click="editItem(item)"
+                                color="green"
+                                >
+                                <v-icon dark>
+                                    mdi-wallet-plus-outline
+                                </v-icon>
+                            </v-btn>                            
+                        </v-col>
+
+                        <v-col class="mx-0" cols="6">
+                            <v-btn                                
+                                icon
+                                class="mr-0"
+                                @click="editItem(item)"
+                                color="red"
+                                >
+                                <v-icon dark>
+                                    mdi-close-circle-outline
+                                </v-icon>
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                                            
+                    
                 </template>
             </v-data-table>
         </v-card>
@@ -143,7 +160,7 @@ export default {
                 interest_rate:0,
                 interest_to_pay:0,
                 amount_to_finance:0,
-                period:0,
+                period:1,
                 fee:0,                
                 clients:[
                     //{text:'Jorge Ramirez', value:'1'}
@@ -153,15 +170,7 @@ export default {
     },
 
     computed:{
-        calculate(){
-            let me = this;
-            me.loans.interest_to_pay = 0;
-            me.loans.amount_to_finance =0;
-            me.loans.fee = 0;
-            me.loans.interest_to_pay = me.loans.capital * (me.loans.interest_rate/100) * me.loans.period;
-            me.loans.amount_to_finance = parseFloat(me.loans.capital) + parseFloat(me.loans.interest_to_pay);
-            me.loans.fee = me.loans.amount_to_finance / me.loans.period;
-        }
+        
     },
 
     created(){
@@ -192,16 +201,27 @@ export default {
             });
         },
 
+        calculate(){
+            let me = this;
+            me.loans.interest_to_pay = 0;
+            me.loans.amount_to_finance = 0;
+            me.loans.fee = 0;
+            me.loans.interest_to_pay = (me.loans.capital * (me.loans.interest_rate/100) * me.loans.period).toFixed(2);
+            me.loans.amount_to_finance = (parseFloat(me.loans.capital) + parseFloat(me.loans.interest_to_pay)).toFixed(2);
+            me.loans.fee = (me.loans.amount_to_finance / me.loans.period).toFixed(2);
+        },
+
         save(){
             let me = this;
+            me.calculate();
             axios.post('api/Loans/CreateLoan',{
                 'idclient': me.loans.idclient,
-                'capital': parseFloat(me.loans.capital),
-                'interest_rate': parseFloat(me.loans.interest_rate),
-                'period': parseInt(me.loans.period),
-                'interest_to_pay': parseFloat(me.loans.interest_to_pay),
-                'amount_to_finance': parseFloat(me.loans.amount_to_finance),
-                'fee': parseFloat(me.loans.fee.toFixed(2)),
+                'capital': me.loans.capital,
+                'interest_rate': me.loans.interest_rate,
+                'period': me.loans.period,
+                'interest_to_pay': me.loans.interest_to_pay,
+                'amount_to_finance': me.loans.amount_to_finance,
+                'fee': me.loans.fee,
             }).then(function (response){
                 me.loans.dialog = false;
                 me.list();
