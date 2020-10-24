@@ -102,23 +102,21 @@
                 :headers="loans.header"
                 :items="loans.list"
                 :search="loans.search">
+
                 <template v-slot:item.actions="{ item }">
                     <v-row>
                         <v-col class="mx-0" cols="4">
-                            <v-dialog v-model="payments.dialog" persistent max-width="400px">
-                                <template v-slot:activator="{ on, attrs}">
-                                    <v-btn                                
-                                        icon
-                                        class="mx-0"
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        color="green"
-                                        >
-                                        <v-icon dark>
-                                            mdi-wallet-plus-outline
-                                        </v-icon>
-                                    </v-btn> 
-                                </template>
+                            <v-btn                                
+                                icon
+                                class="mx-0"
+                                @click="addPayment(item)"
+                                color="green"
+                                >
+                                <v-icon dark>
+                                    mdi-wallet-plus-outline
+                                </v-icon>
+                            </v-btn> 
+                            <v-dialog v-model="payments.dialog" persistent max-width="400px">                                
                                 <v-card>
                                     <v-card-title>
                                         <v-row>
@@ -130,9 +128,9 @@
                                             <v-col cols="12" class="mt-sm-0 pt-sm-0">
                                                 <div class="subtitle-2 info--text mt-sm-0 pt-sm-0">
                                                     <v-icon>mdi-pound-box-outline</v-icon>
-                                                     {{item.idloan}} 
+                                                     {{payments.idloan}} 
                                                     <v-icon>mdi-account-box-outline</v-icon>
-                                                     {{item.client}}
+                                                     {{payments.client}}
                                                 </div>
                                             </v-col>
                                         </v-row>
@@ -162,7 +160,7 @@
                                         <v-btn
                                             color="primary"
                                             text
-                                            @click="payments.dialog = false"
+                                            @click="closePayment()"
                                         >
                                             Close
                                         </v-btn>
@@ -192,34 +190,31 @@
                         </v-col>
 
                         <v-col class="mx-0" cols="4">
+                            <v-btn                           
+                                icon
+                                class="mx-0"
+                                @click="showCancel(item)"
+                                color="red"
+                                >
+                                <v-icon dark>
+                                    mdi-close-circle-outline
+                                </v-icon>
+                            </v-btn>  
                             <v-dialog
-                                v-model="loans.dialogCancel"
+                                v-model="loans.cancel.dialogCancel"
                                 persistent
                                 max-width="290"
-                            >
-                                <template v-slot:activator="{ on, attrs}">
-                                    <v-btn                           
-                                        icon
-                                        class="mx-0"
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        color="red"
-                                        >
-                                        <v-icon dark>
-                                            mdi-close-circle-outline
-                                        </v-icon>
-                                    </v-btn>        
-                                </template>
+                            >                                
                                 <v-card>
                                     <v-card-title class="headline">
                                         Cancel item?
                                     </v-card-title>
                                     <v-card-text>
-                                        You are about to cancel the loan # {{item.idloan}}
+                                        You are about to cancel the loan # {{loans.cancel.idloan}}
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="loans.dialogCancel = false">Close</v-btn>
+                                        <v-btn text color="primary" @click="closeCancel()">Close</v-btn>
                                         <v-btn text color="primary">Cancel</v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -241,8 +236,7 @@ export default {
     data(){
         return{
             loans:{
-                dialog:false,
-                dialogCancel:false,
+                dialog:false,                
                 list:[
                     //{idloan:'1',client:'Jorge Ramirez',capital:'1000',interest_rate:'2',period:'12',interest_to_pay:'0',amount_to_finance:'0',fee:'0',created_dt:'2020-10-23'}
                 ],
@@ -271,11 +265,18 @@ export default {
                 clients:[
                     //{text:'Jorge Ramirez', value:'1'}
                 ],
+
+                cancel:{
+                    dialogCancel:false,
+                    idloan:''
+                }
                
             },
 
             payments:{
                 dialog:false,
+                idloan:'',
+                client:'',
                 amount:0
             },
 
@@ -325,6 +326,32 @@ export default {
             me.loans.interest_to_pay = (me.loans.capital * (me.loans.interest_rate/100) * me.loans.period).toFixed(2);
             me.loans.amount_to_finance = (parseFloat(me.loans.capital) + parseFloat(me.loans.interest_to_pay)).toFixed(2);
             me.loans.fee = (me.loans.amount_to_finance / me.loans.period).toFixed(2);
+        },
+
+        addPayment(item){
+            let me = this;
+            me.payments.dialog = true;
+            me.payments.idloan = item.idloan;
+            me.payments.client = item.client;
+        },
+
+        closePayment(){
+            this.payments.dialog = false;
+            this.payments.idloan = '';
+            this.payments.client = '';
+            this.payments.amount = 0;
+        },
+
+        showCancel(item){
+            let me = this;
+            me.loans.cancel.dialogCancel = true;
+            me.loans.cancel.idloan = item.idloan;
+        },
+
+        closeCancel(item){
+            let me = this;
+            me.loans.cancel.dialogCancel = false;
+            me.loans.cancel.idloan = '';
         },
 
         validate(action){
@@ -407,13 +434,13 @@ export default {
             })
         },
         
-        savePayment(item){
+        savePayment(){
             let me = this;
             if(me.validate('Payment')){
                 return;
             }
             axios.post('api/Payments/Create',{
-                'idloan' : item.idloan,
+                'idloan' : me.payments.idloan,
                 'amount' : me.payments.amount
             }).then(function (response){
                 me.payments.dialog = false;
