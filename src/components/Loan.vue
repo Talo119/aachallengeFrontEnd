@@ -104,30 +104,122 @@
                 :search="loans.search">
                 <template v-slot:item.actions="{ item }">
                     <v-row>
-                        <v-col class="mx-0" cols="6">
-                            <v-btn                                
-                                icon
-                                class="mx-0"
-                                @click="editItem(item)"
-                                color="green"
-                                >
-                                <v-icon dark>
-                                    mdi-wallet-plus-outline
-                                </v-icon>
-                            </v-btn>                            
+                        <v-col class="mx-0" cols="4">
+                            <v-dialog v-model="payments.dialog" persistent max-width="400px">
+                                <template v-slot:activator="{ on, attrs}">
+                                    <v-btn                                
+                                        icon
+                                        class="mx-0"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        color="green"
+                                        >
+                                        <v-icon dark>
+                                            mdi-wallet-plus-outline
+                                        </v-icon>
+                                    </v-btn> 
+                                </template>
+                                <v-card>
+                                    <v-card-title>
+                                        <v-row>
+                                            <v-col cols="12" class="mb-sm-0 pb-sm-0">
+                                                <span class="headline secondary--text mb-sm-0 pb-md-0">
+                                                    Add Payment
+                                                </span>
+                                            </v-col>
+                                            <v-col cols="12" class="mt-sm-0 pt-sm-0">
+                                                <v-text class="subtitle-2 info--text mt-sm-0 pt-sm-0">
+                                                    <v-icon>mdi-pound-box-outline</v-icon>
+                                                     {{item.idloan}} 
+                                                    <v-icon>mdi-account-box-outline</v-icon>
+                                                     {{item.client}}
+                                                </v-text>
+                                            </v-col>
+                                        </v-row>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="12">
+                                                    <v-text-field
+                                                        label="Amount"
+                                                        required
+                                                        v-model="payments.amount"
+                                                    >                                                    
+                                                    </v-text-field>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            color="primary"
+                                            text
+                                            @click="closeForm()"
+                                        >
+                                            Close
+                                        </v-btn>
+                                        <v-btn
+                                            color="primary"
+                                            text
+                                            @click="save()"
+                                        >
+                                            Save
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>                                                    
                         </v-col>
 
-                        <v-col class="mx-0" cols="6">
+                        <v-col class="mx-0" cols="4">
                             <v-btn                                
                                 icon
                                 class="mx-0"
                                 @click="editItem(item)"
-                                color="red"
+                                color="orange"
                                 >
                                 <v-icon dark>
-                                    mdi-close-circle-outline
+                                    mdi-card-search-outline
                                 </v-icon>
                             </v-btn>
+                        </v-col>
+
+                        <v-col class="mx-0" cols="4">
+                            <v-dialog
+                                v-model="loans.dialogCancel"
+                                persistent
+                                max-width="290"
+                            >
+                                <template v-slot:activator="{ on, attrs}">
+                                    <v-btn                           
+                                        icon
+                                        class="mx-0"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        color="red"
+                                        >
+                                        <v-icon dark>
+                                            mdi-close-circle-outline
+                                        </v-icon>
+                                    </v-btn>        
+                                </template>
+                                <v-card>
+                                    <v-card-title class="headline">
+                                        Cancel item?
+                                    </v-card-title>
+                                    <v-card-text>
+                                        You are about to cancel the loan # {{item.idloan}}
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="loans.dialogCancel = false">Close</v-btn>
+                                        <v-btn text color="primary">Cancel</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+
+                            </v-dialog>
+                            
                         </v-col>
                     </v-row>
                                             
@@ -144,7 +236,10 @@ export default {
         return{
             loans:{
                 dialog:false,
-                list:[],
+                dialogCancel:false,
+                list:[
+                    {idloan:'1',client:'Jorge Ramirez',capital:'1000',interest_rate:'2',period:'12',interest_to_pay:'0',amount_to_finance:'0',fee:'0',created_dt:'2020-10-23'}
+                ],
                 header:[
                     {text:'# Loan', value:'idloan'},
                     {text:'Client', value:'client'},
@@ -167,9 +262,14 @@ export default {
                 period:1,
                 fee:0,                
                 clients:[
-                    //{text:'Jorge Ramirez', value:'1'}
+                    {text:'Jorge Ramirez', value:'1'}
                 ],
                
+            },
+
+            payments:{
+                dialog:false,
+                amount:0
             },
 
             valid:0,
@@ -183,8 +283,8 @@ export default {
     },
 
     created(){
-        this.list();
-        this.selectClient();
+        //this.list();
+        //this.selectClient();
     },
 
     methods:{
