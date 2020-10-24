@@ -149,6 +149,11 @@
                                                     >                                                    
                                                     </v-text-field>
                                                 </v-col>
+
+                                                <v-col cols="12" v-show="valid">
+                                                    <div class="red--text" v-for="v in validMessage" :key="v" v-text="v"></div>
+                                                </v-col>
+
                                             </v-row>
                                         </v-container>
                                     </v-card-text>
@@ -164,7 +169,7 @@
                                         <v-btn
                                             color="primary"
                                             text
-                                            @click="savePayment(item.idloan)"
+                                            @click="savePayment(item)"
                                         >
                                             Save
                                         </v-btn>
@@ -322,26 +327,34 @@ export default {
             me.loans.fee = (me.loans.amount_to_finance / me.loans.period).toFixed(2);
         },
 
-        validate(){
+        validate(action){
             let me = this;
             me.valid = 0;
             me.validMessage = [];
 
-            if(!me.loans.idclient || me.loans.idclient == 0){
+            if (action == 'Loan'){
+                if(!me.loans.idclient || me.loans.idclient == 0){
                 me.validMessage.push("You must enter the Client.")
-            }
+                }
 
-            if(!me.loans.capital || me.loans.capital == 0){
-                me.validMessage.push("You must enter the capital.")
-            }
+                if(!me.loans.capital || me.loans.capital == 0){
+                    me.validMessage.push("You must enter the capital.")
+                }
 
-            if(!me.loans.interest_rate || me.loans.interest_rate == 0){
-                me.validMessage.push("You must enter the interest rate.")
-            }
+                if(!me.loans.interest_rate || me.loans.interest_rate == 0){
+                    me.validMessage.push("You must enter the interest rate.")
+                }
 
-            if(!me.loans.period || me.loans.period == 0){
-                me.validMessage.push("You must enter the interest rate.")
+                if(!me.loans.period || me.loans.period == 0){
+                    me.validMessage.push("You must enter the interest rate.")
+                }
+            } else if (action == 'Payment')
+            {
+                 if(!me.payments.amount || me.payments.amount == 0){
+                    me.validMessage.push("You must enter the amount.")
+                }
             }
+            
 
             if(me.validMessage.length > 0){
                 me.valid = 1;
@@ -373,7 +386,7 @@ export default {
         save(){
             let me = this;
 
-            if(me.validate()){
+            if(me.validate('Loan')){
                 return;
             }
 
@@ -394,11 +407,13 @@ export default {
             })
         },
         
-        savePayment(idloan){
+        savePayment(item){
             let me = this;
-
+            if(me.validate('Payment')){
+                return;
+            }
             axios.post('api/Payments/Create',{
-                'idloan' : idloan,
+                'idloan' : item.idloan,
                 'amount' : me.payments.amount
             }).then(function (response){
                 me.payments.dialog = false;
