@@ -288,13 +288,35 @@
                                 v-if="item.condicion"                         
                                 icon
                                 class="mx-0"
-                                @click="showCancel(item)"
+                                @click="showCancelPayment(item)"
                                 color="red"
                                 >
                                 <v-icon dark>
                                     mdi-close-circle-outline
                                 </v-icon>
-                            </v-btn>  
+                            </v-btn>
+
+                            <v-dialog
+                                v-model="payments.cancel.dialogCancel"
+                                persistent
+                                max-width="290"
+                            >                                
+                                <v-card>
+                                    <v-card-title class="headline">
+                                        Cancel item?
+                                    </v-card-title>
+                                    <v-card-text>
+                                        You are about to cancel the payment # {{payments.cancel.idpayment}}
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="closeCancelPayment()">Close</v-btn>
+                                        <v-btn text color="primary" @click="cancelPayment()">Cancel</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+
+                            </v-dialog>
+
                         </template>
 
 
@@ -344,6 +366,7 @@ export default {
                 ],
                 search:'',
                 editedIndex:-1,
+                idlian:'',
                 idclient:'',
                 capital:0,
                 interest_rate:0,
@@ -374,7 +397,11 @@ export default {
                     {text:'Date', value:'created_dt'},
                     {text:'Condition', value:'condicion'},
                     {text:'Cancel', value:'cancel'},
-                ]
+                ],
+                cancel:{
+                    dialogCancel:false,
+                    idpayment:''
+                }
             },
 
             valid:0,
@@ -449,6 +476,12 @@ export default {
             let me = this;
             me.loans.cancel.dialogCancel = false;
             me.loans.cancel.idloan = '';
+        },
+        
+        closeCancelPayment(){
+            let me = this;
+            me.payments.cancel.dialogCancel = false;
+            me.payments.cancel.idpayment = '';
         },
 
         validate(action){
@@ -558,9 +591,16 @@ export default {
             });
         },
         
+        showCancelPayment(item){
+            let me = this;
+            me.payments.cancel.dialogCancel = true;
+            me.payments.cancel.idpayment = item.idpayment;
+        },
+
         showDetails(item){
             let me = this;
             me.details = 1;
+            me.loans.idloan = item.idloan;
             axios.get('api/Payments/ListDetail/'+item.idloan).then(function(response){
                 me.payments.list = response.data;
             }).catch(function(error){
