@@ -6,7 +6,7 @@
             </v-col>
 
             <v-col class="text-end" xs6>
-                <v-row justify="end">
+                <v-row justify="end" class="mr-sm-1">
                     <v-dialog v-model="loans.dialog" persistent max-width="500px">
                         <template v-slot:activator="{on, attrs}">
                             <v-btn class="mx-2" fab small dark color="primary" v-bind="attrs" v-on="on">
@@ -239,6 +239,15 @@
                         <span class="headline secondary--text">Details</span>
                     </v-card-title>
 
+                    <v-card-text>
+                        <v-data-table
+                            :headers="payments.header"
+                            :items="payments.list"
+                        >
+
+                        </v-data-table>
+                    </v-card-text>
+
                     <v-card-actions>
                         <v-btn
                             color="primary"
@@ -304,13 +313,18 @@ export default {
                 dialog:false,
                 idloan:'',
                 client:'',
-                amount:0
+                amount:0,
+                list:[],
+                header:[
+                    {text:'# Payment', value:'idpayment'},
+                    {text:'Amount', value:'amount'},
+                    {text:'Date', value:'created_dt'},
+                ]
             },
 
             valid:0,
             validMessage:[],
             details:0
-
         }
     },
 
@@ -472,6 +486,7 @@ export default {
                 'amount' : me.payments.amount
             }).then(function (response){
                 me.payments.dialog = false;
+                me.payments.amount = '';
             }).catch(function(error){
                 console.log(error);
             })
@@ -491,6 +506,11 @@ export default {
         showDetails(item){
             let me = this;
             me.details = 1;
+            axios.get('api/Payments/ListDetail/'+item.idloan).then(function(response){
+                me.payments.list = response.data;
+            }).catch(function(error){
+                console.log(error);
+            });
         },
 
         closeDetails(){
