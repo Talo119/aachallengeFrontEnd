@@ -1,15 +1,15 @@
 <template>
     <v-container>
-        <v-row class="my-2" justify="end">
-            <v-col xs6 color="secondary">
-                <h1 class="secondary--text">Loans</h1>
+        <v-row v-if="details == 0" class="my-2" justify="end">
+            <v-col xs12 color="secondary">
+                <h1 class="headline secondary--text">Loans</h1>
             </v-col>
 
             <v-col class="text-end" xs6>
                 <v-row justify="end">
                     <v-dialog v-model="loans.dialog" persistent max-width="500px">
                         <template v-slot:activator="{on, attrs}">
-                            <v-btn class="mx-2" fab dark color="primary" v-bind="attrs" v-on="on">
+                            <v-btn class="mx-2" fab small dark color="primary" v-bind="attrs" v-on="on">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                         </template>
@@ -83,11 +83,14 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
+                    <v-btn class="mx-2" fab small dark color="primary">
+                        <v-icon>mdi-printer-settings</v-icon>
+                    </v-btn>
                 </v-row>
             </v-col>
         </v-row>
 
-        <v-card>
+        <v-card v-if="details == 0">
             <v-card-title>
                 <v-text-field
                     v-model="loans.search"
@@ -180,7 +183,7 @@
                             <v-btn                                
                                 icon
                                 class="mx-0"
-                                @click="editItem(item)"
+                                @click="showDetails(item)"
                                 color="orange"
                                 >
                                 <v-icon dark>
@@ -228,6 +231,30 @@
                 </template>
             </v-data-table>
         </v-card>
+
+        <v-row v-if="details == 1">
+            <v-col xs-12>
+                <v-card>
+                    <v-card-title>
+                        <span class="headline secondary--text">Details</span>
+                    </v-card-title>
+
+                    <v-card-actions>
+                        <v-btn
+                            color="primary"
+                            text
+                            class="text-end"
+                            @click="closeDetails()"
+                        >
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+
+                </v-card>
+            </v-col>
+        </v-row>
+
+
     </v-container>
 </template>
 <script>
@@ -281,7 +308,8 @@ export default {
             },
 
             valid:0,
-            validMessage:[]
+            validMessage:[],
+            details:0
 
         }
     },
@@ -458,8 +486,17 @@ export default {
             }).catch(function(error){
                 console.log(error);
             });
-        }
+        },
+        
+        showDetails(item){
+            let me = this;
+            me.details = 1;
+        },
 
+        closeDetails(){
+            let me = this;
+            me.details = 0;
+        }
     }
 
 }
