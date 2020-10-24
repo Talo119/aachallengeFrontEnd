@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row v-if="details == 0" class="my-2" justify="end">
-            <v-col xs12 color="secondary">
+            <v-col xs6 color="secondary">
                 <h1 class="headline secondary--text">Loans</h1>
             </v-col>
 
@@ -106,6 +106,27 @@
                 :items="loans.list"
                 :search="loans.search">
 
+                <template v-slot:item.capital="{item}">
+                    {{item.capital.toFixed(2)}}
+                </template>
+
+                <template v-slot:item.interest_to_pay="{item}">
+                    {{item.interest_to_pay.toFixed(2)}}
+                </template>
+
+                <template v-slot:item.amount_to_finance="{item}">
+                    {{item.amount_to_finance.toFixed(2)}}
+                </template>
+
+                <template v-slot:item.fee="{item}">
+                    {{item.fee.toFixed(2)}}
+                </template>
+                
+                <template v-slot:item.condicion="{item}">
+                    <v-chip v-if="item.condicion" class="white--text" color="green" x-small>Active</v-chip>
+                    <v-chip v-else color="red" class="white--text" x-small>Canceled</v-chip>
+                </template>
+
                 <template v-slot:item.actions="{ item }">
                     <v-row>
                         <v-col class="mx-0" cols="4">
@@ -193,7 +214,8 @@
                         </v-col>
 
                         <v-col class="mx-0" cols="4">
-                            <v-btn                           
+                            <v-btn
+                                v-if="item.condicion"                         
                                 icon
                                 class="mx-0"
                                 @click="showCancel(item)"
@@ -256,6 +278,26 @@
                             :items="payments.list"
                         >
 
+                        <template v-slot:item.condicion="{item}">
+                            <v-chip v-if="item.condicion" class="white--text" color="green" x-small>Active</v-chip>
+                            <v-chip v-else color="red" class="white--text" x-small>Canceled</v-chip>
+                        </template>
+
+                        <template v-slot:item.cancel="{item}">
+                            <v-btn
+                                v-if="item.condicion"                         
+                                icon
+                                class="mx-0"
+                                @click="showCancel(item)"
+                                color="red"
+                                >
+                                <v-icon dark>
+                                    mdi-close-circle-outline
+                                </v-icon>
+                            </v-btn>  
+                        </template>
+
+
                         </v-data-table>
                     </v-card-text>
 
@@ -290,12 +332,12 @@ export default {
                 header:[
                     {text:'# Loan', value:'idloan'},
                     {text:'Client', value:'client'},
-                    {text:'Capital', value:'capital'},
-                    {text:'Interest Rate', value:'interest_rate'},
-                    {text:'Period', value:'period'},
-                    {text:'Interest to Pay', value:'interest_to_pay'},
-                    {text:'Amount to Finance', value:'amount_to_finance'},
-                    {text:'Fee', value:'fee'},
+                    {text:'Capital (L.)', value:'capital'},
+                    {text:'Rate (%)', value:'interest_rate'},
+                    {text:'Period (Months)', value:'period'},
+                    {text:'Interests (L.)', value:'interest_to_pay'},
+                    {text:'Amount (L.)', value:'amount_to_finance'},
+                    {text:'Fee (L.)', value:'fee'},
                     {text:'Date', value:'created_dt'},
                     {text:'Condition', value:'condicion'},
                     {text:'Actions', value:'actions'},
@@ -328,8 +370,10 @@ export default {
                 list:[],
                 header:[
                     {text:'# Payment', value:'idpayment'},
-                    {text:'Amount', value:'amount'},
+                    {text:'Amount (L.)', value:'amount'},
                     {text:'Date', value:'created_dt'},
+                    {text:'Condition', value:'condicion'},
+                    {text:'Cancel', value:'cancel'},
                 ]
             },
 
