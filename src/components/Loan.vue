@@ -236,7 +236,18 @@
             <v-col xs-12>
                 <v-card>
                     <v-card-title>
-                        <span class="headline secondary--text">Details</span>
+                        <v-row>
+                            <v-col xs6>
+                                <span class="headline secondary--text">Details</span>
+                            </v-col>
+                            <v-col xs6 class="text-end">
+                                <v-btn small class="mx-2" dark color="primary" justify="end">
+                                    <v-icon>mdi-printer-settings</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                        
+                        
                     </v-card-title>
 
                     <v-card-text>
