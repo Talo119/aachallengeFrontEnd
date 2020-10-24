@@ -215,7 +215,7 @@
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn text color="primary" @click="closeCancel()">Close</v-btn>
-                                        <v-btn text color="primary">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="cancelLoan()">Cancel</v-btn>
                                     </v-card-actions>
                                 </v-card>
 
@@ -447,6 +447,17 @@ export default {
             }).catch(function(error){
                 console.log(error);
             })
+        },
+
+        cancelLoan(){
+            let me = this;
+            axios.put('api/Loans/Cancel/'+me.loans.cancel.idloan,{}).then(function(response){
+                me.loans.cancel.idclient = '';
+                me.loans.cancel.dialogCancel = false;
+                me.list();                        
+            }).catch(function(error){
+                console.log(error);
+            });
         }
 
     }
