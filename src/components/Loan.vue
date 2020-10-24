@@ -128,12 +128,12 @@
                                                 </span>
                                             </v-col>
                                             <v-col cols="12" class="mt-sm-0 pt-sm-0">
-                                                <v-text class="subtitle-2 info--text mt-sm-0 pt-sm-0">
+                                                <div class="subtitle-2 info--text mt-sm-0 pt-sm-0">
                                                     <v-icon>mdi-pound-box-outline</v-icon>
                                                      {{item.idloan}} 
                                                     <v-icon>mdi-account-box-outline</v-icon>
                                                      {{item.client}}
-                                                </v-text>
+                                                </div>
                                             </v-col>
                                         </v-row>
                                     </v-card-title>
@@ -144,6 +144,7 @@
                                                     <v-text-field
                                                         label="Amount"
                                                         required
+                                                        type="number"
                                                         v-model="payments.amount"
                                                     >                                                    
                                                     </v-text-field>
@@ -156,14 +157,14 @@
                                         <v-btn
                                             color="primary"
                                             text
-                                            @click="closeForm()"
+                                            @click="payments.dialog = false"
                                         >
                                             Close
                                         </v-btn>
                                         <v-btn
                                             color="primary"
                                             text
-                                            @click="save()"
+                                            @click="savePayment(item.idloan)"
                                         >
                                             Save
                                         </v-btn>
@@ -238,7 +239,7 @@ export default {
                 dialog:false,
                 dialogCancel:false,
                 list:[
-                    {idloan:'1',client:'Jorge Ramirez',capital:'1000',interest_rate:'2',period:'12',interest_to_pay:'0',amount_to_finance:'0',fee:'0',created_dt:'2020-10-23'}
+                    //{idloan:'1',client:'Jorge Ramirez',capital:'1000',interest_rate:'2',period:'12',interest_to_pay:'0',amount_to_finance:'0',fee:'0',created_dt:'2020-10-23'}
                 ],
                 header:[
                     {text:'# Loan', value:'idloan'},
@@ -250,6 +251,7 @@ export default {
                     {text:'Amount to Finance', value:'amount_to_finance'},
                     {text:'Fee', value:'fee'},
                     {text:'Date', value:'created_dt'},
+                    {text:'Condition', value:'condicion'},
                     {text:'Actions', value:'actions'},
                 ],
                 search:'',
@@ -262,7 +264,7 @@ export default {
                 period:1,
                 fee:0,                
                 clients:[
-                    {text:'Jorge Ramirez', value:'1'}
+                    //{text:'Jorge Ramirez', value:'1'}
                 ],
                
             },
@@ -283,8 +285,8 @@ export default {
     },
 
     created(){
-        //this.list();
-        //this.selectClient();
+        this.list();
+        this.selectClient();
     },
 
     methods:{
@@ -387,6 +389,19 @@ export default {
             }).then(function (response){
                 me.loans.dialog = false;
                 me.list();
+            }).catch(function(error){
+                console.log(error);
+            })
+        },
+        
+        savePayment(idloan){
+            let me = this;
+
+            axios.post('api/Payments/Create',{
+                'idloan' : idloan,
+                'amount' : me.payments.amount
+            }).then(function (response){
+                me.payments.dialog = false;
             }).catch(function(error){
                 console.log(error);
             })
