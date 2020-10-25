@@ -2,14 +2,14 @@
     <v-container>
         <v-row class="my-2" justify="end">
             <v-col xs6 color="secondary">
-                <h1 class="secondary--text" >Clients</h1>
+                <h1 class="headline secondary--text" >Clients</h1>
             </v-col>
 
             <v-col xs6 class="text-end" >
                 <v-row justify="end">
                     <v-dialog v-model="dialog" persistent max-width="500px">
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mx-2" fab dark color="primary" v-bind="attrs" v-on="on">
+                            <v-btn class="mx-2" small fab dark color="primary" v-bind="attrs" v-on="on">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>                    
                         </template>
@@ -87,7 +87,10 @@
                                 </v-btn>
                             </v-card-actions>
                     </v-card>
-                </v-dialog>
+                    </v-dialog>
+                    <v-btn class="mx-2" fab small dark color="primary">
+                        <v-icon>mdi-printer-settings</v-icon>
+                    </v-btn>
                 </v-row>
             </v-col>
         </v-row> 
