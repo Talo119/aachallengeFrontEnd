@@ -204,7 +204,7 @@
                             <v-btn                                
                                 icon
                                 class="mx-0"
-                                @click="showDetails(item)"
+                                @click="showDetails(item.idloan)"
                                 color="orange"
                                 >
                                 <v-icon dark>
@@ -366,7 +366,7 @@ export default {
                 ],
                 search:'',
                 editedIndex:-1,
-                idlian:'',
+                idloan:'',
                 idclient:'',
                 capital:0,
                 interest_rate:0,
@@ -583,9 +583,20 @@ export default {
         cancelLoan(){
             let me = this;
             axios.put('api/Loans/Cancel/'+me.loans.cancel.idloan,{}).then(function(response){
-                me.loans.cancel.idclient = '';
+                me.loans.cancel.idloan = '';
                 me.loans.cancel.dialogCancel = false;
                 me.list();                        
+            }).catch(function(error){
+                console.log(error);
+            });
+        },
+
+        cancelPayment(){
+            let me = this;
+            axios.put('api/Payments/Cancel/'+me.payments.cancel.idpayment,{}).then(function(response){                
+                me.payments.cancel.dialogCancel = false;
+                me.payments.cancel.idpayment = '';
+                me.showDetails(me.loans.idloan);
             }).catch(function(error){
                 console.log(error);
             });
@@ -597,11 +608,11 @@ export default {
             me.payments.cancel.idpayment = item.idpayment;
         },
 
-        showDetails(item){
+        showDetails(idloan){
             let me = this;
             me.details = 1;
-            me.loans.idloan = item.idloan;
-            axios.get('api/Payments/ListDetail/'+item.idloan).then(function(response){
+            me.loans.idloan = idloan;
+            axios.get('api/Payments/ListDetail/'+idloan).then(function(response){
                 me.payments.list = response.data;
             }).catch(function(error){
                 console.log(error);
