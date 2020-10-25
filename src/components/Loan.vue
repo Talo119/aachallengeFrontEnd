@@ -261,7 +261,7 @@
                         <v-row>
                             <v-col xs6>
                                 <span class="headline secondary--text">Details</span>
-                                <span class="subtitle-2 info--text">{{ loans.balance }}</span>
+                                
                             </v-col>
                             <v-col xs6 class="text-end">
                                 <v-btn small class="mx-2" dark color="primary" justify="end">
@@ -322,6 +322,20 @@
 
 
                         </v-data-table>
+
+                        <v-row class="info--text">
+                            <v-col  xs12>
+                                <strong>Balance:</strong>
+                                L.{{ loans.balance.toFixed(2) }}
+                            </v-col>                            
+                        </v-row>
+                        <v-row class="green--text">
+                            <v-col xs12>
+                                <strong>Total Payments:</strong>
+                                L.{{ payments.totalPayments.toFixed(2) }}
+                            </v-col>
+                        </v-row>
+
                     </v-card-text>
 
                     <v-card-actions>
@@ -401,7 +415,8 @@ export default {
                 cancel:{
                     dialogCancel:false,
                     idpayment:''
-                }
+                },
+                totalPayments:0.0
             },
 
             valid:0,
@@ -610,19 +625,18 @@ export default {
             
             me.payments.list.map(function(x){
                 if(x.condicion){
-                    totalPayments = totalPayments + x.amount;
+                    totalPayments = totalPayments + x.amount;                    
                 }
             });
-            console.log(totalPayments);
+            me.payments.totalPayments = totalPayments;
+
             me.loans.list.map(function(y){
                 if(y.idloan == idloan){
                     amountToFinance = y.amount_to_finance;
                 }
             });
-            console.log(amountToFinance);
 
             balance = amountToFinance - totalPayments;
-
             
             return me.loans.balance =  balance;
 
