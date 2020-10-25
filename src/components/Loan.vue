@@ -261,6 +261,7 @@
                         <v-row>
                             <v-col xs6>
                                 <span class="headline secondary--text">Details</span>
+                                <span class="subtitle-2 info--text">{{ loans.balance }}</span>
                             </v-col>
                             <v-col xs6 class="text-end">
                                 <v-btn small class="mx-2" dark color="primary" justify="end">
@@ -377,12 +378,11 @@ export default {
                 clients:[
                     //{text:'Jorge Ramirez', value:'1'}
                 ],
-
+                balance:0.0,  
                 cancel:{
                     dialogCancel:false,
                     idloan:''
-                }
-               
+                }               
             },
 
             payments:{
@@ -602,6 +602,32 @@ export default {
             });
         },
         
+        calculatedBalance(idloan){
+            let me = this;
+            var totalPayments = 0.0;
+            var amountToFinance = 0.0;
+            var balance = 0.0;
+            
+            me.payments.list.map(function(x){
+                if(x.condicion){
+                    totalPayments = totalPayments + x.amount;
+                }
+            });
+            console.log(totalPayments);
+            me.loans.list.map(function(y){
+                if(y.idloan == idloan){
+                    amountToFinance = y.amount_to_finance;
+                }
+            });
+            console.log(amountToFinance);
+
+            balance = amountToFinance - totalPayments;
+
+            
+            return me.loans.balance =  balance;
+
+        },
+
         showCancelPayment(item){
             let me = this;
             me.payments.cancel.dialogCancel = true;
@@ -611,9 +637,10 @@ export default {
         showDetails(idloan){
             let me = this;
             me.details = 1;
-            me.loans.idloan = idloan;
+            me.loans.idloan = idloan;            
             axios.get('api/Payments/ListDetail/'+idloan).then(function(response){
                 me.payments.list = response.data;
+                me.calculatedBalance(idloan);
             }).catch(function(error){
                 console.log(error);
             });
