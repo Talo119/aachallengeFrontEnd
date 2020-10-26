@@ -45,30 +45,30 @@
             </v-list-item-content>
 
           </v-list-item>
-        </template>
-        
-        <template>
-          <v-list-item  :to="{name: 'Client'}">
-          
-            <v-list-item-action>
-              <v-icon>mdi-account-box-multiple</v-icon>
-            </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title color="red lighten-2">Clients</v-list-item-title>
-            </v-list-item-content>
-
-          </v-list-item>
-        </template>
+        </template>      
 
         <template>
           <v-list-group>
             <v-list-item slot="activator">
               <v-list-item-content>
                 <v-list-item-title>
-                  Finance
+                  Credits
                 </v-list-item-title>
               </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item  :to="{name: 'Client'}">
+          
+              <v-list-item-action>
+                <v-icon>mdi-account-box-multiple</v-icon>
+              </v-list-item-action>
+
+              <v-list-item-content>
+                <v-list-item-title color="red lighten-2">
+                  Clients
+                </v-list-item-title>
+              </v-list-item-content>
+
             </v-list-item>
 
             <v-list-item :to="{name:'Loan'}">
@@ -84,20 +84,49 @@
               </v-list-item-content>
             </v-list-item>
 
-            <v-list-item :to="{name:'Payment'}">
+          </v-list-group>
+        </template>
+
+        <template>
+          <v-list-group>
+
+            <v-list-item slot="activator">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    Admin
+                  </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item :to="{name:''}">
               <v-list-item-action>
                 <v-icon>
-                  mdi-wallet
+                  mdi-folder-account
                 </v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
-                  Payments
+                  Roles
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+
+            <v-list-item :to="{name:''}">
+              <v-list-item-action>
+                <v-icon>
+                  mdi-clipboard-account
+                </v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Users
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
           </v-list-group>
         </template>
+
       </v-list>
     </v-navigation-drawer>
 
