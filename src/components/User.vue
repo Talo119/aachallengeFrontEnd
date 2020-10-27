@@ -142,7 +142,7 @@ export default {
             header:[
                 { text: 'ID', value: 'iduser' },
                 { text: 'Role', value: 'role' },
-                { text: 'Name', value: 'namee' },
+                { text: 'Name', value: 'nombre' },
                 { text: 'Email', value: 'email' },
                 { text: 'Condition', value: 'condicion' },
                 { text: 'Actions', value: 'action' },
