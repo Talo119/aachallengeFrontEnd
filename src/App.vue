@@ -8,7 +8,7 @@
       <v-icon>mdi-triangle</v-icon>
 
     </v-system-bar>
-    <v-app-bar color="primary" app>
+    <v-app-bar v-if="login" color="primary" app>
       <v-app-bar-nav-icon class="white--text" @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="white--text">Credit Control</v-toolbar-title>
     </v-app-bar>
@@ -155,5 +155,12 @@ export default {
     //
     drawer:null
   }),
+
+  computed:{
+    login(){
+      return this.$store.state.user;
+    }
+  }
+
 };
 </script>

@@ -46,7 +46,7 @@ export default {
         return{
             email:'',
             password:'',
-            error:''
+            error:null
         }
     },
 
@@ -58,10 +58,11 @@ export default {
                 return respuesta.data
             })
             .then(data =>{
-                this.$store.dispatch("saveToken",data.Token)
+                this.$store.dispatch("saveToken",data.token)
                 this.$router.push({name:'Home'})
             })
             .catch(err =>{
+                console.log(err)
                 if (err.response.status==400){
                     this.error = 'This is not a valid email.'
                 } else if (err.response.status==404){
