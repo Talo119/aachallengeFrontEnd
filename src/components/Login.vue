@@ -19,7 +19,7 @@
                                     </v-text-field>
                                 </v-col>
 
-                                <v-col cols="12" v-show="valid">
+                                <v-col cols="12" v-show="error">
                                     <div class="red--text" v-if="error">
                                         {{error}}
                                     </div>
@@ -31,7 +31,7 @@
                         <v-divider></v-divider>
                         <v-card-actions>
                             <div class="text-start px-sm-3 pb-sm-3">
-                                <v-btn @click="signIn" color="primary">Sign In</v-btn>
+                                <v-btn @click="signIn()" color="primary">Sign In</v-btn>
                             </div>
                         </v-card-actions>
                 </v-card>
@@ -47,6 +47,30 @@ export default {
             email:'',
             password:'',
             error:''
+        }
+    },
+
+    methods:{
+        signIn(){
+            this.error = null;
+            axios.post('api/Users/Login',{email: this.email, password: this.password})
+            .then(respuesta =>{
+                return respuesta.data
+            })
+            .then(data =>{
+                this.$store.dispatch("saveToken",data.Token)
+                this.$router.push({name:'Home'})
+            })
+            .catch(err =>{
+                if (err.response.status==400){
+                    this.error = 'This is not a valid email.'
+                } else if (err.response.status==404){
+                    this.error = 'The user does not exist or their data is incorrect.'
+                } else{
+                    this.error = 'An error occurred.'
+                }
+                console.log(err)
+            })
         }
     }
 }
