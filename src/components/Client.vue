@@ -86,7 +86,7 @@
                                     Save
                                 </v-btn>
                             </v-card-actions>
-                    </v-card>
+                        </v-card>
                     </v-dialog>
                     <v-btn class="mx-2" fab small dark color="primary">
                         <v-icon>mdi-printer-settings</v-icon>
