@@ -176,10 +176,32 @@ export default {
         close(){
             let me= this;
             me.dialog = false;
+            me.cleanUp();
         },
+
+        cleanUp(){
+            let me = this;
+            me.idrole='',
+            me.nombre='',
+            me.email='',
+            me.password=''
+        },
+
         save(){
             let me= this;
-            me.dialog = false;
+            
+            axios.post('api/Users/Create',{
+                'idrole':me.idrole,
+                'nombre':me.nombre,
+                'email':me.email,
+                'password':me.password
+            }).then(function(response){
+                me.close();
+                me.list();
+                me.cleanUp();
+            }).catch(function(error){
+                console.log(error);
+            });
         },
 
         select(){
