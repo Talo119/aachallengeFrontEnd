@@ -179,8 +179,10 @@ export default {
 
     methods:{
         list(){
-            let me = this;            
-            axios.get('api/Clients/List').then(function(response){
+            let me = this;
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
+            axios.get('api/Clients/List',configuration).then(function(response){
                     me.clients = response.data;
                 }).catch(function(error){
                     console.log(error);
@@ -218,6 +220,8 @@ export default {
             if(this.validate()){
                 return;
             }
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
             if(this.editedIndex > -1){
                 //Edit
                 let me = this;
@@ -228,7 +232,7 @@ export default {
                     'phone_number': me.phone_number,
                     'email': me.email,
                     'credit_limit' : me.credit_limit
-                }).then(function(response){
+                },configuration).then(function(response){
                     me.dialog = false;
                     me.cleanUp();
                     me.list();
@@ -244,7 +248,7 @@ export default {
                     'phone_number': me.phone_number,
                     'email': me.email,
                     'credit_limit' : me.credit_limit
-                }).then(function(response){
+                },configuration).then(function(response){
                     me.dialog = false;
                     me.cleanUp();
                     me.list();
