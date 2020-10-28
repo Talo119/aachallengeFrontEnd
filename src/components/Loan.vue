@@ -9,7 +9,7 @@
                 <v-row justify="end" class="mr-sm-1">
                     <v-dialog v-model="loans.dialog" persistent max-width="500px">
                         <template v-slot:activator="{on, attrs}">
-                            <v-btn class="mx-2" fab small dark color="primary" v-bind="attrs" v-on="on">
+                            <v-btn v-if="$store.state.user.role == 'Credits'" class="mx-2" fab small dark color="primary" v-bind="attrs" v-on="on">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                         </template>

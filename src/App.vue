@@ -1,16 +1,30 @@
 <template>
   <v-app id="inspire">
-    <v-system-bar app>
+    <v-system-bar app v-if="login">
       <v-spacer></v-spacer>
-
+      <span>{{ $store.state.user.nombre }}</span>
+      <span>{{ $store.state.user.role }}</span>
       <v-icon>mdi-square</v-icon>
       <v-icon>mdi-circle</v-icon>
       <v-icon>mdi-triangle</v-icon>
 
     </v-system-bar>
     <v-app-bar v-if="login" color="primary" app>
+      
       <v-app-bar-nav-icon class="white--text" @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="white--text">Credit Control</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        text             
+        @click="logOut()"
+        class="white--text"
+        v-if="login" 
+      >
+        <v-icon>mdi-logout</v-icon>
+        Logout
+      </v-btn>
+        
+      
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" 
@@ -57,7 +71,7 @@
               </v-list-item-content>
             </v-list-item>
 
-            <v-list-item  :to="{name: 'Client'}">
+            <v-list-item  :to="{name: 'Client'}" v-if="isAdmin || isCredits">
           
               <v-list-item-action>
                 <v-icon>mdi-account-box-multiple</v-icon>
@@ -71,7 +85,7 @@
 
             </v-list-item>
 
-            <v-list-item :to="{name:'Loan'}">
+            <v-list-item :to="{name:'Loan'}" v-if="isAdmin || isCredits || isCharges">
               <v-list-item-action>
                 <v-icon>
                   mdi-cash-multiple
@@ -87,7 +101,7 @@
           </v-list-group>
         </template>
 
-        <template>
+        <template v-if="isAdmin">
           <v-list-group>
 
             <v-list-item slot="activator">
@@ -159,6 +173,28 @@ export default {
   computed:{
     login(){
       return this.$store.state.user;
+    },
+
+    isAdmin(){
+      return this.$store.state.user && this.$store.state.user.role == 'Admin';
+    },
+
+    isCredits(){
+      return this.$store.state.user && this.$store.state.user.role == 'Credits';      
+    },
+
+    isCharges(){
+      return this.$store.state.user && this.$store.state.user.role == 'Charges';
+    }
+  },
+
+  created(){
+    this.$store.dispatch("autoLogin");
+  },
+
+  methods:{
+    logOut(){
+      this.$store.dispatch("out");
     }
   }
 

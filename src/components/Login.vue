@@ -1,10 +1,12 @@
 <template>
     <v-container>
-        <v-row align="center" justify="center">
+        <v-row align-content="center" justify="center">
             <v-col align="center" justify="center">
-                <v-card  max-width="400">                    
+                <v-card  max-width="400px">                    
                     <v-toolbar class="ma-sm-0 pa-sm-0" dark color="primary">
-                        Login
+                        <v-toolbar-title>
+                            Login
+                        </v-toolbar-title>                        
                     </v-toolbar>                    
                     
                     <v-card-text>
@@ -58,11 +60,11 @@ export default {
                 return respuesta.data
             })
             .then(data =>{
-                this.$store.dispatch("saveToken",data.token)
+                console.log(data.token)
+                this.$store.dispatch("saveToken", data.token)
                 this.$router.push({name:'Home'})
             })
-            .catch(err =>{
-                console.log(err)
+            .catch(err =>{                
                 if (err.response.status==400){
                     this.error = 'This is not a valid email.'
                 } else if (err.response.status==404){
