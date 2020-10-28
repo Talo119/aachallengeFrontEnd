@@ -54,7 +54,9 @@ export default {
     methods:{
         list(){
             let me = this;
-            axios.get('api/Roles/List').then(function(response){
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
+            axios.get('api/Roles/List',configuration).then(function(response){
                 me.roles = response.data;
             }).catch(function(error){
                 console.log(error);

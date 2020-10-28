@@ -165,8 +165,10 @@ export default {
 
     methods:{
         list(){
-            let me = this;            
-            axios.get('api/Users/List').then(function(response){
+            let me = this;
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};        
+            axios.get('api/Users/List',configuration).then(function(response){
                     me.users = response.data;
                 }).catch(function(error){
                     console.log(error);
@@ -189,13 +191,14 @@ export default {
 
         save(){
             let me= this;
-            
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
             axios.post('api/Users/Create',{
                 'idrole':me.idrole,
                 'nombre':me.nombre,
                 'email':me.email,
                 'password':me.password
-            }).then(function(response){
+            },configuration).then(function(response){
                 me.close();
                 me.list();
                 me.cleanUp();
@@ -207,9 +210,9 @@ export default {
         select(){
             let me = this;
             var rolesArray=[];
-            //let header={"Authorization" : "Bearer " + this.$store.state.token};
-            //let configuracion= {headers: header};
-            axios.get('api/Roles/Select').then(function(response){                    
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
+            axios.get('api/Roles/Select',configuration).then(function(response){                    
                 rolesArray = response.data;  
                 rolesArray.map(function(x){
                     me.roles.push({text:x.name, value:x.idrole});

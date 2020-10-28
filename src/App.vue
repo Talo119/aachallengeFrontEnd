@@ -2,8 +2,8 @@
   <v-app id="inspire">
     <v-system-bar app v-if="login">
       <v-spacer></v-spacer>
-      <span>{{ $store.state.user.nombre }}</span>
-      <span>{{ $store.state.user.role }}</span>
+      User:       
+      <span>{{ $store.state.user.nombre }}</span>      
       <v-icon>mdi-square</v-icon>
       <v-icon>mdi-circle</v-icon>
       <v-icon>mdi-triangle</v-icon>

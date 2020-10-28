@@ -32,7 +32,7 @@
                         </v-card-text>
                         <v-divider></v-divider>
                         <v-card-actions>
-                            <div class="text-start px-sm-3 pb-sm-3">
+                            <div class="text-end px-sm-3 pb-sm-3">
                                 <v-btn @click="signIn()" color="primary">Sign In</v-btn>
                             </div>
                         </v-card-actions>
