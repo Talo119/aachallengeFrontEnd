@@ -436,8 +436,10 @@ export default {
 
     methods:{
         list(){
-            let me = this;            
-            axios.get('api/Loans/List').then(function(response){
+            let me = this;
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};         
+            axios.get('api/Loans/List',configuration).then(function(response){
                     me.loans.list = response.data;
                 }).catch(function(error){
                     console.log(error);
@@ -447,7 +449,9 @@ export default {
         selectClient(){
             let me = this;
             var clientsArray=[];
-            axios.get('api/Clients/SelectClients').then(function(response){                    
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
+            axios.get('api/Clients/SelectClients',configuration).then(function(response){                    
                 clientsArray = response.data;  
                 clientsArray.map(function(x){
                     me.loans.clients.push({text:x.name, value:x.idclient});
@@ -561,7 +565,8 @@ export default {
             if(me.validate('Loan')){
                 return;
             }
-
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
             me.calculate();
             axios.post('api/Loans/CreateLoan',{
                 'idclient': me.loans.idclient,
@@ -571,7 +576,7 @@ export default {
                 'interest_to_pay': me.loans.interest_to_pay,
                 'amount_to_finance': me.loans.amount_to_finance,
                 'fee': me.loans.fee,
-            }).then(function (response){
+            },configuration).then(function (response){
                 me.loans.dialog = false;
                 me.list();
             }).catch(function(error){
@@ -584,10 +589,12 @@ export default {
             if(me.validate('Payment')){
                 return;
             }
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
             axios.post('api/Payments/Create',{
                 'idloan' : me.payments.idloan,
                 'amount' : me.payments.amount
-            }).then(function (response){
+            },configuration).then(function (response){
                 me.payments.dialog = false;
                 me.payments.amount = '';
             }).catch(function(error){
@@ -597,7 +604,9 @@ export default {
 
         cancelLoan(){
             let me = this;
-            axios.put('api/Loans/Cancel/'+me.loans.cancel.idloan,{}).then(function(response){
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
+            axios.put('api/Loans/Cancel/'+me.loans.cancel.idloan,{},configuration).then(function(response){
                 me.loans.cancel.idloan = '';
                 me.loans.cancel.dialogCancel = false;
                 me.list();                        
@@ -608,7 +617,9 @@ export default {
 
         cancelPayment(){
             let me = this;
-            axios.put('api/Payments/Cancel/'+me.payments.cancel.idpayment,{}).then(function(response){                
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};
+            axios.put('api/Payments/Cancel/'+me.payments.cancel.idpayment,{},configuration).then(function(response){                
                 me.payments.cancel.dialogCancel = false;
                 me.payments.cancel.idpayment = '';
                 me.showDetails(me.loans.idloan);
@@ -651,8 +662,10 @@ export default {
         showDetails(idloan){
             let me = this;
             me.details = 1;
-            me.loans.idloan = idloan;            
-            axios.get('api/Payments/ListDetail/'+idloan).then(function(response){
+            me.loans.idloan = idloan;
+            let header={"Authorization" : "Bearer " + this.$store.state.token};
+            let configuration= {headers: header};           
+            axios.get('api/Payments/ListDetail/'+idloan,configuration).then(function(response){
                 me.payments.list = response.data;
                 me.calculatedBalance(idloan);
             }).catch(function(error){
