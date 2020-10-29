@@ -12,8 +12,8 @@
             max-width="calc(100% - 32px)"
           >
             <v-sparkline
-                :labels="months"
-                :value="values"
+                :labels="clients"
+                :value="loans"
                 color="white"
                 line-width="2"
                 padding="16"
@@ -24,7 +24,7 @@
           <v-card-text class="pt-0 mt-6">
               <div class="title font-weight-light mb-4">
                   <strong>
-                    Loans per Month
+                    Loans per Client
                   </strong>
                   
               </div>
@@ -44,8 +44,8 @@
             max-width="calc(100% - 32px)"
           >
             <v-sparkline
-                :labels="clients"
-                :value="loans"
+                :labels="clientsP"
+                :value="payments"
                 color="white"
                 line-width="2"
                 padding="16"
@@ -56,7 +56,7 @@
           <v-card-text class="pt-0 mt-6">
               <div class="title font-weight-light mb-4">
                   <strong>
-                    Loans per Client
+                    Payments per Client
                   </strong>
                   
               </div>
@@ -69,85 +69,70 @@
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     name: 'HelloWorld',
 
-    data: () => ({
+    data: () => ({     
+      loansValues:null,
+      paymentsValues:null,
+      clients:[],
+      loans:[],
+      clientsP:[],
+      payments:[],
 
-      months:[
-            'Enero',
-            'Febrero',
-            'Marzo'
-        ],
-        values:[
-            1500,
-            1300,
-            3000
-        ],
-
-        clients:[
-          'Juan',
-          'Carlos',
-          'Mario'
-        ],
-
-        loans:[
-          10000,
-          5500,
-          17500
-
-        ],
-
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
+      
     }),
+
+    methods:{
+      getChartLoans(){
+        let me = this;
+        let header={"Authorization" : "Bearer " + this.$store.state.token};
+        let configuration= {headers: header};
+        axios.get('api/Loans/LoansPerClient',configuration).then(function(response){
+            me.loansValues = response.data;
+            me.loadLoans();
+        }).catch(function(error){
+            console.log(error);
+        });
+      },
+
+      getChartPayments(){
+        let me = this;
+        let header={"Authorization" : "Bearer " + this.$store.state.token};
+        let configuration= {headers: header};
+        axios.get('api/Payments/PaymentsPerClient',configuration).then(function(response){
+            me.paymentsValues = response.data;
+            me.loadPayments();
+        }).catch(function(error){
+            console.log(error);
+        });
+      },
+
+      loadLoans(){
+        let me = this;
+        let mesn ='';
+        me.loansValues.map(function(x){          
+          me.clients.push(x.label);
+          me.loans.push(x.value);
+        });  
+      },
+
+      loadPayments(){
+        let me = this;
+        let mesn ='';
+        me.paymentsValues.map(function(x){          
+          me.clientsP.push(x.label);
+          me.payments.push(x.value);
+        });  
+      }
+
+    },
+
+    mounted(){
+      this.getChartLoans();
+      this.getChartPayments();
+    }
+
   }
 </script>
