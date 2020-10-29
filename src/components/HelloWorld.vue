@@ -1,92 +1,69 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
+  <v-container fluid>
+    <v-row align="center">
+      <v-col  cols="6">
+        <v-card
+          class="mt-4 mx-auto"          
+        >
+          <v-sheet
+            class="v-sheet--offset mx-auto"
+            color="cyan"
+            elevation="12"
+            max-width="calc(100% - 32px)"
           >
-            {{ next.text }}
-          </a>
-        </v-row>
+            <v-sparkline
+                :labels="months"
+                :value="values"
+                color="white"
+                line-width="2"
+                padding="16"
+            >
+            </v-sparkline>
+          </v-sheet>
+
+          <v-card-text class="pt-0 mt-6">
+              <div class="title font-weight-light mb-4">
+                  <strong>
+                    Loans per Month
+                  </strong>
+                  
+              </div>
+          </v-card-text>
+        </v-card>
+        
       </v-col>
 
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
+      <v-col  cols="6">
+        <v-card
+          class="mt-4 mx-auto"          
+        >
+          <v-sheet
+            class="v-sheet--offset mx-auto"
+            color="light-green"
+            elevation="12"
+            max-width="calc(100% - 32px)"
           >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
+            <v-sparkline
+                :labels="clients"
+                :value="loans"
+                color="white"
+                line-width="2"
+                padding="16"
+            >
+            </v-sparkline>
+          </v-sheet>
 
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
+          <v-card-text class="pt-0 mt-6">
+              <div class="title font-weight-light mb-4">
+                  <strong>
+                    Loans per Client
+                  </strong>
+                  
+              </div>
+          </v-card-text>
+        </v-card>
       </v-col>
+      
     </v-row>
   </v-container>
 </template>
@@ -96,6 +73,31 @@
     name: 'HelloWorld',
 
     data: () => ({
+
+      months:[
+            'Enero',
+            'Febrero',
+            'Marzo'
+        ],
+        values:[
+            1500,
+            1300,
+            3000
+        ],
+
+        clients:[
+          'Juan',
+          'Carlos',
+          'Mario'
+        ],
+
+        loans:[
+          10000,
+          5500,
+          17500
+
+        ],
+
       ecosystem: [
         {
           text: 'vuetify-loader',
