@@ -88,7 +88,7 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
-                    <v-btn class="mx-2" fab small dark color="primary">
+                    <v-btn @click="createPDF()" class="mx-2" fab small dark color="primary">
                         <v-icon>mdi-printer-settings</v-icon>
                     </v-btn>
                 </v-row>
@@ -137,6 +137,8 @@
 </template>
 <script>
 import axios from 'axios'
+import jsPDF from 'jspdf'
+import autotable from 'jspdf-autotable'
 export default {
     
     data(){
@@ -290,6 +292,28 @@ export default {
             me.editedIndex = -1,
             me.formTitle = 'New Client'
         },
+    
+        createPDF(){
+            var columns = [
+                {title:'Name', dataKey:'name'},
+                {title:'Address', dataKey:'address'},
+                {title:'Phone Number', dataKey:'phone_number'},
+                {title:'Email', dataKey:'email'},
+                {title:'Credit Limit', dataKey:'credit_limit'},
+            ];
+
+            var doc = new jsPDF('p','pt');
+            doc.autoTable(columns,this.clients,{
+                margin:{top:60},
+                addPageContent: function(data){
+                    doc.text("List of Clients",40,30);
+                }
+            });
+            doc.save('Clients.pdf');
+
+
+        }
+
     }
 
 }

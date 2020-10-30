@@ -83,7 +83,7 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
-                    <v-btn class="mx-2" fab small dark color="primary">
+                    <v-btn class="mx-2" fab small dark color="primary" @click="createPDF()">
                         <v-icon>mdi-printer-settings</v-icon>
                     </v-btn>
                 </v-row>
@@ -264,7 +264,7 @@
                                 
                             </v-col>
                             <v-col xs6 class="text-end">
-                                <v-btn small class="mx-2" dark color="primary" justify="end">
+                                <v-btn small class="mx-2" dark color="primary" justify="end" @click="createPDFdetails()">
                                     <v-icon>mdi-printer-settings</v-icon>
                                 </v-btn>
                             </v-col>
@@ -358,6 +358,8 @@
 </template>
 <script>
 import axios from 'axios'
+import jsPDF from 'jspdf'
+import autotable from 'jspdf-autotable'
 export default {
     data(){
         return{
@@ -676,7 +678,48 @@ export default {
         closeDetails(){
             let me = this;
             me.details = 0;
+        },
+
+        createPDF(){
+            var columns = [
+                {title:'# Loan', dataKey:'idloan'},
+                {title:'Client', dataKey:'client'},
+                {title:'Capital (L.)', dataKey:'capital'},
+                {title:'Rate (%)', dataKey:'interest_rate'},
+                {title:'Period (Months)', dataKey:'period'},
+                {title:'Interests (L.)', dataKey:'interest_to_pay'},
+                {title:'Amount (L.)', dataKey:'amount_to_finance'},
+                {title:'Fee (L.)', dataKey:'fee'},
+                {title:'Date', dataKey:'created_dt'}                
+            ];
+
+            var doc = new jsPDF('p','pt');
+            doc.autoTable(columns,this.loans.list,{
+                margin:{top:60},
+                addPageContent: function(data){
+                    doc.text("List of Loans",40,30);
+                }
+            });
+            doc.save('Loans.pdf');
+        },
+
+        createPDFdetails(){
+            var columns = [
+                {title:'# Payment', dataKey:'idpayment'},
+                {title:'Amount (L.)', dataKey:'amount'},
+                {title:'Date', dataKey:'created_dt'}                
+            ];
+
+            var doc = new jsPDF('p','pt');
+            doc.autoTable(columns,this.payments.list,{
+                margin:{top:60},
+                addPageContent: function(data){
+                    doc.text("List of Loans Details",40,30);
+                }
+            });
+            doc.save('Loans Details.pdf');
         }
+
     }
 
 }
