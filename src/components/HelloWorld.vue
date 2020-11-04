@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-row align="center">
-      <v-col  cols="6">
+    <v-row dense align="center">
+      <v-col xs="12" sm="12" md="12" lg="6" xl="6">
         <v-card
           class="mt-4 mx-auto"          
         >
@@ -33,7 +33,7 @@
         
       </v-col>
 
-      <v-col  cols="6">
+      <v-col  xs="12" sm="12" md="12" lg="6" xl="6">
         <v-card
           class="mt-4 mx-auto"          
         >

@@ -6,7 +6,7 @@ import vuetify from './plugins/vuetify';
 import axios from 'axios'
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'https://localhost:44315/'
+axios.defaults.baseURL = 'https://aachallengeapi.azurewebsites.net/'
 new Vue({
   router,
   store,
